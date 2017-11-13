@@ -1,0 +1,228 @@
+<odoo>
+    <data>
+        <!--Product Template Inherit-->
+        <record model="ir.ui.view" id="view_product_form_vegavizyon">
+            <field name="name">vegavizyon.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook//page[@name='general_information']/group//group[@name='group_general']"
+                       position="after">
+                    <group>
+                        <field name="stations" widget="many2many_checkboxes"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Mrp Production Form Inherit-->
+        <record model="ir.ui.view" id="view_mrp_production_form">
+            <field name="name">vegavizyon.mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']"
+                       position="after">
+                    <field name="stations"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Mrp Production Tree View-->
+        <record model="ir.ui.view" id="view_mrp_production_tree">
+            <field name="name">vegavizyon.mrp.production.tree</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="stations"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_product_search_vegavizyon">
+            <field name="name">vegavizyon.product.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pricelist_id']" position='after'><!--need to find the x-path -->
+                    <separator/>
+                    <filter string="Al. Kesim" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [1])]"/>
+                    <filter string="CNC" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [2])]"/>
+                    <filter string="Çelik İstasyonu" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [3])]"/>
+                    <filter string="Kaynak" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [4])]"/>
+                    <filter string="Giyotin" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [5])]"/>
+                    <filter string="Akbant" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [6])]"/>
+                    <filter string="Router" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [7])]"/>
+                    <filter string="Fason" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [8])]"/>
+                    <filter string="Montaj" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [9])]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_production_search_vegavizyon">
+            <field name="name">vegavizyon.production.search</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position='after'><!--need to find the x-path -->
+                    <separator/>
+                    <filter string="Al. Kesim" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', '=', 1)]"/>
+                    <filter string="CNC" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [2])]"/>
+                    <filter string="Çelik İstasyonu" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [3])]"/>
+                    <filter string="Kaynak" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [4])]"/>
+                    <filter string="Giyotin" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [5])]"/>
+                    <filter string="Akbant" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [6])]"/>
+                    <filter string="Router" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [7])]"/>
+                    <filter string="Fason" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [8])]"/>
+                    <filter string="Montaj" name="stations" icon="terp-accessories-archiver-minus"
+                            domain="[('stations', 'in', [9])]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchaseorder_form_vegavizyon">
+            <field name="name">vegavizyon.purchaseorder.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page/field[@name='order_line']/tree/field[@name='qty_received']"
+                       position="before">
+
+                    <field name="total_weight"/>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_stockpicking_form_vegavizyon">
+            <field name="name">vegavizyon.stockpicking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pack_operation_product_ids']/tree/field[@name='qty_done']"
+                       position="after">
+
+                    <field name="total_weight"/>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="vegavizyon_productcreate_list_action">
+            <field name="name">Ürün Oluşturma</field>
+            <field name="res_model">vegavizyon.productcreator</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Otomatik Ürün Oluşturun
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="vegavizyon_productcreate_list_view">
+            <field name="name">Ürün Oluşturma Listesi</field>
+            <field name="model">vegavizyon.productcreator</field>
+            <field name="arch" type="xml">
+                <tree string="Ürün Oluşturma Listesi">
+                    <field name="name"/>
+                    <field name="main_code_station1"/>
+                    <field name="main_code_station2"/>
+                    <field name="main_code_station3"/>
+                    <field name="main_code_station4"/>
+                    <field name="main_code_station5"/>
+                    <field name="main_code_station6"/>
+                    <field name="main_code_station7"/>
+                    <field name="main_code_station8"/>
+                    <field name="main_code_station9"/>
+                    <field name="main_code_route1"/>
+                    <field name="main_code_route2"/>
+                    <field name="main_code_route3"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="vegavizyon_productcreate_form_view">
+            <field name="name">Ürün Oluşturma Formu</field>
+            <field name="model">vegavizyon.productcreator</field>
+            <field name="arch" type="xml">
+                <form string="Ürün Oluşturma">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Ana Ürün Kodu"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="main_code_station1"/>
+                            <field name="main_code_station2"/>
+                            <field name="main_code_station3"/>
+                            <field name="main_code_station4"/>
+                            <field name="main_code_station5"/>
+                            <field name="main_code_station6"/>
+                            <field name="main_code_station7"/>
+                            <field name="main_code_station8"/>
+                            <field name="main_code_station9"/>
+                        </group>
+                        <group>
+                            <field name="main_code_route1"/>
+                            <field name="main_code_route2"/>
+                            <field name="main_code_route3"/>
+                        </group>
+                        <group>
+                            <field name="sub_code"/>
+                        </group>
+                        <group>
+                            <field name="sub_code_quantity"/>
+                        </group>
+                        <group>
+                            <field name="sub_code_station1"/>
+                            <field name="sub_code_station2"/>
+                            <field name="sub_code_station3"/>
+                            <field name="sub_code_station4"/>
+                            <field name="sub_code_station5"/>
+                            <field name="sub_code_station6"/>
+                            <field name="sub_code_station7"/>
+                            <field name="sub_code_station8"/>
+                            <field name="sub_code_station9"/>
+                        </group>
+                        <group>
+                            <field name="sub_code_route1"/>
+                            <field name="sub_code_route2"/>
+                            <field name="sub_code_route3"/>
+                        </group>
+                        <group>
+                            <field name="mainproduct_created" attrs="{'readonly' : True}"/>
+                            <field name="mainproduct_failreason" attrs="{'readonly' : True}"/>
+                            <field name="subproduct_created" attrs="{'readonly' : True}"/>
+                            <field name="subproduct_failreason" attrs="{'readonly' : True}"/>
+                            <field name="exception_thrown" attrs="{'readonly' : True}"/>
+                            <field name="exception_message" attrs="{'readonly' : True}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_vegavizyon_createproducts" name="Ürün Oluşturma" parent="stock.menu_stock_config_settings"
+                  action="vegavizyon_productcreate_list_action"/>
+    </data>
+</odoo>

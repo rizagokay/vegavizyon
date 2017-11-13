@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+        <!--  -->
+        <record id="station01" model="vegavizyon.station">
+            <field name="name">Al. Kesim</field>
+        </record>
+        <record id="station02" model="vegavizyon.station">
+            <field name="name">CNC</field>
+        </record>
+        <record id="station03" model="vegavizyon.station">
+            <field name="name">Çelik Kesim</field>
+        </record>
+        <record id="station04" model="vegavizyon.station">
+            <field name="name">Kaynak</field>
+        </record>
+        <record id="station05" model="vegavizyon.station">
+            <field name="name">Giyotin</field>
+        </record>
+        <record id="station06" model="vegavizyon.station">
+            <field name="name">Abkant</field>
+        </record>
+        <record id="station07" model="vegavizyon.station">
+            <field name="name">Router</field>
+        </record>
+        <record id="station08" model="vegavizyon.station">
+            <field name="name">Fason</field>
+        </record>
+        <record id="station9" model="vegavizyon.station">
+            <field name="name">Montaj</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_production_order_custom" inherit_id="mrp.report_mrporder">
+            <xpath expr="//div[@class='oe_structure'][2]" position="before">
+                 <table class="table table-condensed" t-if="o.product_id.stations">
+                        <thead>
+                            <tr>
+                                <th><strong>Gideceği İstasyonlar</strong></th>
+                                <th class="text-right"><strong>Durum</strong></th>
+                                <th class="text-center">
+                                    <strong>Geldiği Tarih / Saat</strong>
+                                </th>
+                                <th class="text-center" >
+                                    <strong>Bittiği Tarih / Saat</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <tr t-foreach="o.product_id.stations" t-as="station">
+                                 <td><span t-field="station.name"/></td>
+                                 <td></td>
+                                 <td></td>
+                                 <td></td>
+                             </tr>
+                        </tbody>
+                    </table>
+            </xpath>
+        </template>
+    </data>
+</odoo>

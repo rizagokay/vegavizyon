@@ -18,11 +18,8 @@ class Station(models.Model):
 class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
-    stations = fields.Many2many(
-        "vegavizyon.station",
-        string="Gideceği İstasyonlar",
-        compute="compute_stations",
-        store=True)
+    stations = fields.Many2many("vegavizyon.station", string="Gideceği İstasyonlar",
+                                compute="compute_stations", store=True)
 
     @api.one
     @api.depends('product_id')
@@ -67,14 +64,11 @@ class ProductCreator(models.Model):
     _description = "Product Creator Object"
 
     name = fields.Char(string="Ana Ürün Kodu", required=True)
-    main_code_station1 = fields.Integer(
-        string="Ana Kod Al.Kesim", required=True)
+    main_code_station1 = fields.Integer(string="Ana Kod Al.Kesim", required=True)
     main_code_station2 = fields.Integer(string="Ana Kod CNC", required=True)
-    main_code_station3 = fields.Integer(
-        string="Ana Kod Çelik Kesim", required=True)
+    main_code_station3 = fields.Integer(string="Ana Kod Çelik Kesim", required=True)
     main_code_station4 = fields.Integer(string="Ana Kod Kaynak", required=True)
-    main_code_station5 = fields.Integer(
-        string="Ana Kod Giyotin", required=True)
+    main_code_station5 = fields.Integer(string="Ana Kod Giyotin", required=True)
     main_code_station6 = fields.Integer(string="Ana Kod Akbant", required=True)
     main_code_station7 = fields.Integer(string="Ana Kod Router", required=True)
     main_code_station8 = fields.Integer(string="Ana Kod Fason", required=True)
@@ -82,6 +76,7 @@ class ProductCreator(models.Model):
     main_code_route1 = fields.Integer(string="Ana Kod Üretim", required=True)
     main_code_route2 = fields.Integer(string="Ana Kod Satın Al", required=True)
     main_code_route3 = fields.Integer(string="Ana Kod MTO", required=True)
+    main_code_internal_referance = fields.Char(string="Ana Kod İç Referans")
     sub_code = fields.Char(string="Alt Ürün Kodu")
     sub_code_quantity = fields.Char("Adet")
     sub_code_station1 = fields.Integer(string="Alt Kod Al.Kesim")
@@ -96,12 +91,11 @@ class ProductCreator(models.Model):
     sub_code_route1 = fields.Integer(string="Alt Kod Üretim")
     sub_code_route2 = fields.Integer(string="Alt Kod Satın Al")
     sub_code_route3 = fields.Integer(string="Alt Kod MTO")
+    sub_code_internal_referance = fields.Char(string="Alt Kod İç Referans")
     mainproduct_created = fields.Boolean("Ana Ürün Oluşturuldu")
-    mainproduct_failreason = fields.Text(
-        string="Ana Ürün Oluşturulmama Nedeni")
+    mainproduct_failreason = fields.Text(string="Ana Ürün Oluşturulmama Nedeni")
     subproduct_created = fields.Boolean(string="Alt Ürün Oluşturuldu")
-    subproduct_failreason = fields.Boolean(
-        string="Alt Ürün Oluşturulmama Nedeni")
+    subproduct_failreason = fields.Boolean(string="Alt Ürün Oluşturulmama Nedeni")
     exception_thrown = fields.Boolean(string="Hata Alındı Mı?")
     exception_message = fields.Text(string="Alınan Hata")
 
@@ -129,6 +123,11 @@ class ProductCreator(models.Model):
                     productvalues["route_ids"] = [(6, 0, routes)]
                 productvalues["name"] = mainproductname
                 productvalues["type"] = "product"
+
+                if "main_code_internal_referance" in vals:
+                    if vals["main_code_internal_referance"]:
+                        int_referance = vals["main_code_internal_referance"]
+                        productvalues["default_code"] = int_referance
                 # create main product
                 createdmainproduct = productenv.create(productvalues)
 
@@ -292,6 +291,10 @@ class ProductCreator(models.Model):
             subproductvalues["route_ids"] = [(6, 0, route_list)]
 
         subproductvalues["type"] = "product"
+
+        if "sub_code_internal_referance" in vals:
+            if vals["sub_code_internal_referance"]:
+                subproductvalues["default_code"] = vals["sub_code_internal_referance"]
 
         return subproductvalues
 

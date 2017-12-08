@@ -76,7 +76,7 @@ class ProductCreator(models.Model):
     main_code_route1 = fields.Integer(string="Ana Kod Üretim", required=True)
     main_code_route2 = fields.Integer(string="Ana Kod Satın Al", required=True)
     main_code_route3 = fields.Integer(string="Ana Kod MTO", required=True)
-    main_code_internal_referance = fields.Char(string="Ana Kod İç Referans")
+    main_code_internal_referance = fields.Char(string="Ana Kod İç Referans", required=True)
     sub_code = fields.Char(string="Alt Ürün Kodu")
     sub_code_quantity = fields.Char("Adet")
     sub_code_station1 = fields.Integer(string="Alt Kod Al.Kesim")
@@ -107,10 +107,11 @@ class ProductCreator(models.Model):
             bomlineenv = self.env["mrp.bom.line"]
 
             mainproductname = vals["name"]
+            mainproductintref = vals["main_code_internal_referance"]
 
             # search for products with the same code first
             foundproducts = productenv.search([('name', '=ilike',
-                                                mainproductname)])
+                                                mainproductname), ('default_code', '=ilike', mainproductintref)])
             # main product is not available
             if len(foundproducts) == 0:
 
@@ -136,10 +137,14 @@ class ProductCreator(models.Model):
                 # create or find sub product
                 if "sub_code" in vals and "sub_code_quantity" in vals:
                     subcode = vals["sub_code"]
+                    refcode = None
+                    if "sub_code_internal_referance" in vals:
+                        if vals["sub_code_internal_referance"]:
+                            refcode = vals["sub_code_internal_referance"]
                     subquantity = vals["sub_code_quantity"]
                     if subcode and subquantity:
-                        if self.subproductavailable(subcode):
-                            subproduct = self.getsubproduct(subcode)
+                        if self.subproductavailable(subcode, refcode):
+                            subproduct = self.getsubproduct(subcode, refcode)
                             # create main product BOM
                             mainproductbom = bomenv.create({
                                 'product_tmpl_id':
@@ -202,10 +207,14 @@ class ProductCreator(models.Model):
                 # create sub products and update boms
                 if "sub_code" in vals and "sub_code_quantity" in vals:
                     subcode = vals["sub_code"]
+                    refcode = None
+                    if "sub_code_internal_referance" in vals:
+                        if vals["sub_code_internal_referance"]:
+                            refcode = vals["sub_code_internal_referance"]
                     subquantity = vals["sub_code_quantity"]
                     if subcode and subquantity:
-                        if self.subproductavailable(subcode):
-                            subproduct = self.getsubproduct(subcode)
+                        if self.subproductavailable(subcode, refcode):
+                            subproduct = self.getsubproduct(subcode, refcode)
                             if bom == None:
                                 mainproductbom = bomenv.create({
                                     'product_tmpl_id':
@@ -310,12 +319,16 @@ class ProductCreator(models.Model):
                                product.product_tmpl_id.id)])
         return boms[0]
 
-    def subproductavailable(self, productname):
+    def subproductavailable(self, productname, refname=None):
         productenv = self.env["product.product"]
-        foundproducts = productenv.search([('name', '=ilike', productname)])
+        foundproducts = {}
+        if refname == None:
+            foundproducts = productenv.search([('name', '=ilike', productname)])
+        else:
+            foundproducts = productenv.search([('name', '=ilike', productname), ('default_code', '=ilike', refname)])
         return len(foundproducts) > 0
 
-    def getsubproduct(self, productname):
+    def getsubproduct(self, productname, refname=None):
         productenv = self.env["product.product"]
         foundproducts = productenv.search([('name', '=ilike', productname)])
         return foundproducts[0]
